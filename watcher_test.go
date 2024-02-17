@@ -1,34 +1,34 @@
-package rwatch
+package fsnotifyr_test
 
 import (
-	"reflect"
 	"strings"
 	"testing"
+
+	fsnotifyr "github.com/sean9999/go-fsnotify-recursively"
 )
 
 const FOLDER_1 string = `.
 └── Documents
     ├── mixed
-    └── textfiles
-	└── torus
-	    └── jamaica	
+    ├── textfiles
+    └── torus
+        └── jamaica
 `
 
 func TestNewWatchTree(t *testing.T) {
 
 	type name string
 	type input string
-	type want string
 
 	tests := []struct {
 		name
 		input
-		want
+		want string
 	}{
-		{name("subdir"), input("testdata"), want(strings.TrimSpace(FOLDER_1))},
-		{name("subdir with trailing slash"), input("testdata/"), want(strings.TrimSpace(FOLDER_1))},
-		{name("explicit subdir"), input("./testdata/"), want(strings.TrimSpace(FOLDER_1))},
-		{name("explicit subdir star"), input("./testdata/*"), want(strings.TrimSpace(FOLDER_1))},
+		{name("subdir"), input("testdata"), strings.TrimSpace(FOLDER_1)},
+		{name("subdir with trailing slash"), input("testdata/"), strings.TrimSpace(FOLDER_1)},
+		{name("explicit subdir"), input("./testdata/"), strings.TrimSpace(FOLDER_1)},
+		{name("explicit subdir star"), input("./testdata/*"), strings.TrimSpace(FOLDER_1)},
 		// {name("implicit subdir doublestar"), input("testdata/**"), want{"testdata", "**"}},
 		// {name("file glob single star"), input("./testdata/*.txt"), want{"./testdata", "*.txt"}},
 		// {name("file glob double star"), input("./testdata/**.txt"), want{"./testdata", "**.txt"}},
@@ -36,14 +36,13 @@ func TestNewWatchTree(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(string(tt.name), func(t *testing.T) {
-			gotTree, err := NewWatchTree(string(tt.input))
-			gotFolder := gotTree.rootFolder.String()
+			gotTree, err := fsnotifyr.NewWatchTree(string(tt.input))
+			gotFolder := gotTree.RootFolder().String()
 			if err != nil {
-
 				t.Errorf("NewWatchTree() error = %v, input %v", err, tt.input)
 				return
 			}
-			if !reflect.DeepEqual(string(tt.want), gotFolder) {
+			if gotFolder != tt.want {
 				t.Errorf("wanted %v but got %v", tt.want, gotFolder)
 			}
 		})

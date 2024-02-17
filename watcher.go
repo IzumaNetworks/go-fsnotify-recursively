@@ -1,4 +1,4 @@
-package rwatch
+package fsnotifyr
 
 import (
 	"os"
@@ -11,12 +11,15 @@ type WatchTree struct {
 	prefix      string
 	globPattern Globber
 	Watcher     *fsnotify.Watcher
-	Events      chan fsnotify.Event
+}
+
+func (w *WatchTree) RootFolder() Folder {
+	return w.rootFolder
 }
 
 func NewWatchTree(rootGlob string) (*WatchTree, error) {
 
-	pathPrefix, shortGlob, err := componentizeGlobString(rootGlob)
+	pathPrefix, shortGlob, err := ComponentizeGlobString(rootGlob)
 	if err != nil {
 		return nil, err
 	}

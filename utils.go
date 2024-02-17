@@ -1,4 +1,4 @@
-package rwatch
+package fsnotifyr
 
 import (
 	"io/fs"
@@ -18,6 +18,7 @@ type Jimenju struct {
 }
 
 // helper function to clean up fs.ReadDir()
+// also sorts, to assist in predictability
 func justFiles(entries []fs.DirEntry, err error) ([]fs.DirEntry, error) {
 	fyles := []fs.DirEntry{}
 	if err != nil {
@@ -28,6 +29,10 @@ func justFiles(entries []fs.DirEntry, err error) ([]fs.DirEntry, error) {
 			fyles = append(fyles, entry)
 		}
 	}
+	//	alpha sort
+	// slices.SortStableFunc(fyles, func(a, b fs.DirEntry) int {
+	// 	return cmp.Compare(a.Name(), b.Name())
+	// })
 	return fyles, nil
 }
 
@@ -47,7 +52,7 @@ func NewWatcherTree(rootGlob string) map[string]bool {
 
 	r := map[string]bool{}
 
-	root, rest, err := componentizeGlobString(rootGlob)
+	root, rest, err := ComponentizeGlobString(rootGlob)
 	if err != nil {
 		panic(err)
 	}

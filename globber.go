@@ -1,4 +1,4 @@
-package rwatch
+package fsnotifyr
 
 import (
 	"fmt"
@@ -24,7 +24,7 @@ type globber struct {
 }
 
 func NewGlobber(fullString string) (Globber, error) {
-	fsRoot, globRoot, err := componentizeGlobString(fullString)
+	fsRoot, globRoot, err := ComponentizeGlobString(fullString)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func (g *globber) String() string {
 	return fmt.Sprintf("%v", output)
 }
 
-func componentizeGlobString(globExpression string) (string, string, error) {
+func ComponentizeGlobString(globExpression string) (string, string, error) {
 	tail := []string{}
 	fullPath := strings.Split(globExpression, string(os.PathSeparator))
 	head := fullPath[:]

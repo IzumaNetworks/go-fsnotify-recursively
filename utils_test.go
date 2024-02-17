@@ -1,7 +1,9 @@
-package rwatch
+package fsnotifyr_test
 
 import (
 	"testing"
+
+	fsnotifyr "github.com/sean9999/go-fsnotify-recursively"
 )
 
 func TestGetGlobParent(t *testing.T) {
@@ -33,7 +35,7 @@ func TestGetGlobParent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(string(tt.name), func(t *testing.T) {
-			gotHead, gotTail, err := componentizeGlobString(string(tt.input))
+			gotHead, gotTail, err := fsnotifyr.ComponentizeGlobString(string(tt.input))
 			if err != nil {
 				t.Errorf("head:\t%q\ntail:\t%q\nerr:\t%v", gotHead, gotTail, err)
 				return

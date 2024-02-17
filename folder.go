@@ -1,4 +1,4 @@
-package rwatch
+package fsnotifyr
 
 import (
 	"fmt"
@@ -38,7 +38,7 @@ func (f *folder) Open(name string) (fs.File, error) {
 }
 
 func (f *folder) String() string {
-	//	looks like the output of `tree -d` (directories only)
+	// looks like the output of `tree -d` (directories only)
 	// you can use FileTree().String() for output that includes regular files
 	return f.FileTree(false).String()
 }
