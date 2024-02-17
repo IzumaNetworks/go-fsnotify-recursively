@@ -7,4 +7,7 @@ require (
 	github.com/gobwas/glob v0.2.3
 )
 
-require golang.org/x/sys v0.17.0 // indirect
+require (
+	github.com/xlab/treeprint v1.2.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
+)

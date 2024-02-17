@@ -33,7 +33,7 @@ func TestGetGlobParent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(string(tt.name), func(t *testing.T) {
-			gotHead, gotTail, err := GlobParent(string(tt.input))
+			gotHead, gotTail, err := componentizeGlobString(string(tt.input))
 			if err != nil {
 				t.Errorf("head:\t%q\ntail:\t%q\nerr:\t%v", gotHead, gotTail, err)
 				return

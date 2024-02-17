@@ -11,17 +11,21 @@ type WatchTree struct {
 	prefix      string
 	globPattern Globber
 	Watcher     *fsnotify.Watcher
+	Events      chan fsnotify.Event
 }
 
 func NewWatchTree(rootGlob string) (*WatchTree, error) {
 
-	pathPrefix, shortGlob, err := GlobParent(rootGlob)
+	pathPrefix, shortGlob, err := componentizeGlobString(rootGlob)
 	if err != nil {
 		return nil, err
 	}
 
 	fileSystem := os.DirFS(pathPrefix)
-	compiledGlob := NewGlobber(shortGlob)
+	compiledGlob, err := NewGlobber(shortGlob)
+	if err != nil {
+		return nil, err
+	}
 
 	mainWatcher, err := fsnotify.NewWatcher()
 	if err != nil {

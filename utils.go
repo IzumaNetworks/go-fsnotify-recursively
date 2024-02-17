@@ -17,7 +17,19 @@ type Jimenju struct {
 	Prefix        string
 }
 
-// }
+// helper function to clean up fs.ReadDir()
+func justFiles(entries []fs.DirEntry, err error) ([]fs.DirEntry, error) {
+	fyles := []fs.DirEntry{}
+	if err != nil {
+		return nil, err
+	}
+	for _, entry := range entries {
+		if entry.Type().IsRegular() {
+			fyles = append(fyles, entry)
+		}
+	}
+	return fyles, nil
+}
 
 // if this slug (portion of a path) is a glob pattern, it's magic
 func isMagic(slug string) bool {
@@ -31,25 +43,11 @@ func isMagic(slug string) bool {
 	return false
 }
 
-func GlobParent(globExpression string) (string, string, error) {
-	tail := []string{}
-	fullPath := strings.Split(globExpression, string(os.PathSeparator))
-	head := fullPath[:]
-	for i, slug := range fullPath {
-		if isMagic(slug) {
-			head = fullPath[:i]
-			tail = fullPath[i:]
-			break
-		}
-	}
-	return strings.Join(head, string(os.PathSeparator)), strings.Join(tail, string(os.PathSeparator)), nil
-}
-
 func NewWatcherTree(rootGlob string) map[string]bool {
 
 	r := map[string]bool{}
 
-	root, rest, err := GlobParent(rootGlob)
+	root, rest, err := componentizeGlobString(rootGlob)
 	if err != nil {
 		panic(err)
 	}
