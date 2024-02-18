@@ -8,4 +8,7 @@ require (
 	github.com/xlab/treeprint v1.2.0
 )
 
-require golang.org/x/sys v0.17.0 // indirect
+require (
+	github.com/bmatcuk/doublestar/v4 v4.6.1 // indirect
+	golang.org/x/sys v0.17.0 // indirect
+)

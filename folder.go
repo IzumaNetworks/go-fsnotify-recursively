@@ -23,6 +23,7 @@ type Folder interface {
 	DestroyChildren() error
 	Destroy() error
 	FileTree(bool) FileTree
+	GlobTree(Globber) FileTree
 }
 
 // folder implements Folder
@@ -57,7 +58,18 @@ func (f *folder) Close() error {
 }
 
 func (f *folder) ReadDir(name string) ([]fs.DirEntry, error) {
-	return fs.ReadDir(f.filesystem, f.FullPath())
+
+	plainFiles, err := fs.ReadDir(f.filesystem, f.FullPath())
+	if err != nil {
+		return nil, err
+	}
+
+	enhancedFiles := []fs.DirEntry{}
+	for _, pfyle := range plainFiles {
+		enhancedFiles = append(enhancedFiles, NewFile(f, pfyle))
+	}
+	return enhancedFiles, nil
+
 }
 
 func (f *folder) Name() string {

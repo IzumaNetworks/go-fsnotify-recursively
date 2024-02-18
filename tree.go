@@ -40,10 +40,12 @@ func (t FileTree) String() string {
 			k := entry.dirEntry
 			v := entry.branch
 			if k.IsDir() {
+				//subNode := node.AddBranch(k.(Folder).FullPath())
 				subNode := node.AddBranch(k.Name())
 				fn(subNode, v)
 			} else {
 				if k.Type().IsRegular() {
+					//node.AddNode(k.(File).FullPath())
 					node.AddNode(k.Name())
 				}
 			}
@@ -51,6 +53,26 @@ func (t FileTree) String() string {
 	}
 	fn(rootNode, t)
 	return strings.TrimSpace(rootNode.String())
+}
+
+func (t FileTree) IsEmpty() bool {
+	return len(t) == 0
+}
+
+// prune empty folders that don't match the glob pattern
+func (bigTree FileTree) Prune(g Globber) FileTree {
+	smallTree := FileTree{}
+	entries := bigTree.entries()
+	for _, entry := range entries {
+		if entry.branch.IsEmpty() {
+			if g.Match(entry.dirEntry.(Folder).FullPath()) {
+				smallTree[entry.dirEntry] = entry.branch
+			}
+		} else {
+			smallTree[entry.dirEntry] = entry.branch
+		}
+	}
+	return smallTree
 }
 
 func (f *folder) FileTree(includeFiles bool) FileTree {

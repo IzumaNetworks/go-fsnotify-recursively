@@ -17,15 +17,16 @@ func (w *WatchTree) RootFolder() Folder {
 	return w.rootFolder
 }
 
+func (w *WatchTree) Globber() Globber {
+	return w.globPattern
+}
+
 func NewWatchTree(rootGlob string) (*WatchTree, error) {
 
-	pathPrefix, shortGlob, err := ComponentizeGlobString(rootGlob)
-	if err != nil {
-		return nil, err
-	}
-
+	compiledGlob, err := NewGlobber(rootGlob)
+	pathPrefix := compiledGlob.Root()
 	fileSystem := os.DirFS(pathPrefix)
-	compiledGlob, err := NewGlobber(shortGlob)
+
 	if err != nil {
 		return nil, err
 	}
