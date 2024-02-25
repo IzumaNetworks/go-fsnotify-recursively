@@ -13,7 +13,7 @@ There does not appear to be a good alternative for this. The goal is:
 - simple, intuitive API
 - usable as a package, or a binary
 
+<img src="jimenju.png" alt="Watch Tree" title="Watch Tree" />
+
 > [!NOTE]
 > In active development. Not suitable for production. YMMV
-
-<img src="jimenju.png" alt="Watch Tree" title="Watch Tree" />
