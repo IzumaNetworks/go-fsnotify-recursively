@@ -31,6 +31,29 @@ func (t FileTree) entries() []record {
 	return kvps
 }
 
+// func (t FileTree) Walk() []fs.DirEntry {
+// 	//	breadth first
+// 	r := []fs.DirEntry{}
+// 	for _, entry := range t.entries() {
+// 		r = append(r, entry.dirEntry)
+// 	}
+// 	return r
+// }
+
+// func (t FileTree) Walk(fn func(record) (string, bool)) []string {
+// 	r := []string{}
+
+// 	for _, rec := range t.entries() {
+// 		str, ok := fn(rec)
+// 		if ok {
+// 			r = append(r, str)
+// 			r = append()
+// 		}
+// 	}
+
+// 	return r
+// }
+
 func (t FileTree) String() string {
 	rootNode := treeprint.New()
 	//	recursive function

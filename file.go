@@ -3,12 +3,14 @@ package fsnotifyr
 import (
 	"io/fs"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
 type File interface {
 	fs.DirEntry
 	FullPath() string
+	ParentFolder() Folder
 }
 
 type file struct {
@@ -16,11 +18,39 @@ type file struct {
 	fs.DirEntry
 }
 
+func (f *file) ParentFolder() Folder {
+	return f.folder
+}
+
 func (f *file) FullPath() string {
-	return strings.Join([]string{f.folder.FullPath(), f.DirEntry.Name()}, string(os.PathSeparator))
+	return filepath.Join(f.folder.FullPath(), f.DirEntry.Name())
 }
 
 func NewFile(folder Folder, de fs.DirEntry) File {
 	fyle := &file{folder, de}
 	return fyle
+}
+
+func FileFromString(fullPath string, rootFolder Folder) File {
+
+	parent := rootFolder
+	basePath, _ := filepath.Split(fullPath)
+	slugs := strings.Split(basePath, string(os.PathSeparator))
+
+	fileInfo, err := fs.Stat(rootFolder.Filesystem(), fullPath)
+	if err != nil {
+		panic(err)
+	}
+
+slugs:
+	for _, slug := range slugs {
+		for _, child := range parent.Children() {
+			if slug == child.Name() {
+				parent = child
+				continue slugs
+			}
+		}
+	}
+	return NewFile(parent, fs.FileInfoToDirEntry(fileInfo))
+
 }

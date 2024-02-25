@@ -24,6 +24,7 @@ type Folder interface {
 	Destroy() error
 	FileTree(bool) FileTree
 	GlobTree(Globber) FileTree
+	Filesystem() fs.FS
 }
 
 // folder implements Folder
@@ -32,6 +33,10 @@ type folder struct {
 	parent     Folder
 	filesystem fs.FS
 	children   []Folder
+}
+
+func (f *folder) Filesystem() fs.FS {
+	return f.filesystem
 }
 
 func (f *folder) Open(name string) (fs.File, error) {
@@ -117,9 +122,9 @@ func (f *folder) ParentFolder() Folder {
 	return f.parent
 }
 
-func (f *folder) Filesystem() fs.FS {
-	return f.filesystem
-}
+// func (f *folder) Filesystem() fs.FS {
+// 	return f.filesystem
+// }
 
 // Spawn creates a new Folder as a child of this Folder
 // It also recursively
@@ -153,7 +158,7 @@ func (f *folder) DestroyChildren() error {
 		}
 	}
 	if err != nil {
-		f.children = nil
+		f.children = f.children[:0]
 	}
 	return err
 }
@@ -197,6 +202,28 @@ func (f *folder) FullPath() string {
 func (f *folder) addChild(child Folder) error {
 	f.children = append(f.children, child)
 	return nil
+}
+
+// AddDescendant takes a fully-qualified path, and locates the proper place in the tree to add a new Folder
+func AddDescendantFolder(fullPath string, rootFolder Folder) (Folder, error) {
+	slugs := strings.Split(fullPath, string(os.PathSeparator))
+	parent := rootFolder
+
+	//	return values
+	var f Folder
+	err := fmt.Errorf("%q did not contain anything new", fullPath)
+
+slugs:
+	for _, slug := range slugs {
+		for _, child := range parent.Children() {
+			if child.Name() == slug {
+				parent = child
+				continue slugs
+			}
+		}
+		f, err = parent.Spawn(slug)
+	}
+	return f, err
 }
 
 // NewFolder is the constructor for [Folder]. It also builds out its descendent tree
