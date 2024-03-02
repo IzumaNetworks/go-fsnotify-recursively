@@ -9,8 +9,8 @@ import (
 	"strings"
 )
 
-// a Folder contains zero or more files, and zero or more sub-Folders
-// it also contains a reference to the underlying filesystem mechanics
+// a Folder contains zero or more files, and zero or more child Folders
+// it contains a reference to it's underlying filesystem, and a it's parent Folder
 type Folder interface {
 	fs.ReadDirFS
 	fs.DirEntry
@@ -24,7 +24,7 @@ type Folder interface {
 	Destroy() error
 	FileTree(bool) FileTree
 	GlobTree(Globber) FileTree
-	Filesystem() fs.FS
+	Filesystem() fs.FS // underlying filesystyem
 }
 
 // folder implements Folder
@@ -39,6 +39,7 @@ func (f *folder) Filesystem() fs.FS {
 	return f.filesystem
 }
 
+// method Open allows Folder to implement the fs.FS interface
 func (f *folder) Open(name string) (fs.File, error) {
 	return f.filesystem.Open(name)
 }

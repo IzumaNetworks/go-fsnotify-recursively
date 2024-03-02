@@ -10,7 +10,7 @@ import (
 type File interface {
 	fs.DirEntry
 	FullPath() string
-	ParentFolder() Folder
+	Parent() Folder
 }
 
 type file struct {
@@ -18,7 +18,7 @@ type file struct {
 	fs.DirEntry
 }
 
-func (f *file) ParentFolder() Folder {
+func (f *file) Parent() Folder {
 	return f.folder
 }
 
@@ -27,8 +27,7 @@ func (f *file) FullPath() string {
 }
 
 func NewFile(folder Folder, de fs.DirEntry) File {
-	fyle := &file{folder, de}
-	return fyle
+	return &file{folder, de}
 }
 
 func FileFromString(fullPath string, rootFolder Folder) File {

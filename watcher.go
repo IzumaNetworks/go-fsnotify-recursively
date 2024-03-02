@@ -18,6 +18,10 @@ type FolderEvent struct {
 	FsNotifyEvent *fsnotify.Event
 }
 
+func NewFolderEvent(Prefix string, File File, Folder Folder, Op string, FsNotifyEvent *fsnotify.Event) FolderEvent {
+	return FolderEvent{Prefix, File, Folder, Op, FsNotifyEvent}
+}
+
 func (fe FolderEvent) String() string {
 	m := map[string]string{
 		"prefix": fe.Prefix,
@@ -53,7 +57,7 @@ func (w *WatchTree) AddFolder(f Folder) {
 	fullyFullPath := filepath.Join(w.prefix, f.FullPath())
 	fmt.Println(fullyFullPath)
 	w.Watcher.Add(fullyFullPath)
-	ev := FolderEvent{w.prefix, f, "add", nil}
+	ev := NewFolderEvent(w.prefix, nil, f, "add", nil)
 
 	//	broadcast self
 	w.FolderEvents <- ev
@@ -65,7 +69,7 @@ func (w *WatchTree) AddFolder(f Folder) {
 }
 
 func (w *WatchTree) RemoveFolder(f Folder) {
-	ev := FolderEvent{w.prefix, f, "destroy", nil}
+	ev := NewFolderEvent(w.prefix, nil, f, "destroy", nil)
 	w.FolderEvents <- ev
 	f.Destroy()
 }
