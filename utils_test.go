@@ -30,7 +30,7 @@ func TestGetGlobParent(t *testing.T) {
 		{name("implicit subdir doublestar"), input("testdata/**"), want{"testdata", "**"}},
 		{name("file glob single star"), input("./testdata/*.txt"), want{"./testdata", "*.txt"}},
 		{name("file glob double star"), input("./testdata/**.txt"), want{"./testdata", "**.txt"}},
-		{name("just movies"), input("testdata/**.avi"), want{"testdata", "**.avi"}},
+		{name("just movies"), input("testdata/**.{avi,mov,mp4}"), want{"testdata", "**.{avi,mov,mp4}"}},
 	}
 
 	for _, tt := range tests {

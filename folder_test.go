@@ -24,13 +24,8 @@ func TestNewFolder(t *testing.T) {
 			"one",
 			os.DirFS("testdata"),
 			".",
-			nil, `
-.
-└── Documents
-    ├── mixed
-    ├── textfiles
-    └── torus
-        └── jamaica`,
+			nil,
+			JUST_FOLDERS,
 			false,
 		},
 	}
