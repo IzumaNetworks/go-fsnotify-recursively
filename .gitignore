@@ -1,1 +1,6 @@
-testdata/
+*.log
+.vscode/settings.json
+*.private
+private.*
+private/
+

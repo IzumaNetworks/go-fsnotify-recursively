@@ -15,7 +15,5 @@ jobs:
         go-version: '1.22'
     - uses: actions/checkout@v4
       name: checkout
-    - name: debug
-      run: pwd && ls
     - name: test
-      run: go test -v .
+      run: go test
