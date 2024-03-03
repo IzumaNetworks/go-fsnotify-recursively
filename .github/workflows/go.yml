@@ -15,4 +15,5 @@ jobs:
       - name: Build
         run: go build -v ./...
       - name: Test with the Go CLI
+        working-directory: "${{ github.workspace }}"
         run: go test
