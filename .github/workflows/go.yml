@@ -4,10 +4,6 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-        run:
-          shell: bash
-          working-directory: "${{ github.workspace }}"
     steps:
     - uses: actions/setup-go@v4
       name: setup
