@@ -3,6 +3,7 @@ package fsnotifyr_test
 import (
 	"io/fs"
 	"os"
+	"strings"
 	"testing"
 
 	fsnotifyr "github.com/sean9999/go-fsnotify-recursively"
@@ -42,7 +43,7 @@ func Test_folder_FileTree(t *testing.T) {
 		fields fields
 		want   string
 	}{
-		{"one", fields{os.DirFS("testdata"), ".", nil}, "asdf"},
+		{"one", fields{os.DirFS("testdata"), ".", nil}, strings.TrimSpace(EVERYTHING)},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

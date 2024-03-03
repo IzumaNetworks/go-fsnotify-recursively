@@ -70,31 +70,3 @@ func ComponentizeGlobString(globExpression string) (string, string, error) {
 	}
 	return strings.Join(head, string(os.PathSeparator)), strings.Join(tail, string(os.PathSeparator)), nil
 }
-
-func (f *folder) GlobTree(g Globber) FileTree {
-	tree := FileTree{}
-	subFolders := f.Children()
-
-	fyles, _ := justFiles(f.ReadDir("."))
-
-	//	regular files
-	for _, fyle := range fyles {
-		if g.Match(fyle.(File).FullPath()) {
-			tree[fyle] = nil
-		}
-	}
-	//	sub [Folders] (branches)
-	for _, subFolder := range subFolders {
-		if g.Match(subFolder.FullPath()) {
-			tree[subFolder] = subFolder.GlobTree(g)
-		} else {
-			subTree := subFolder.GlobTree(g)
-			//	some folders that don't match the glob pattern must be included
-			//	if they have children that match the glob pattern
-			if !subTree.IsEmpty() {
-				tree[subFolder] = subTree
-			}
-		}
-	}
-	return tree
-}
