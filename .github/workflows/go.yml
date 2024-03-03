@@ -4,6 +4,10 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+        run:
+          shell: bash
+          working-directory: "${{ github.workspace }}"
     steps:
       - uses: actions/checkout@v4
       - name: Setup Go
@@ -15,5 +19,4 @@ jobs:
       - name: Build
         run: go build -v ./...
       - name: Test with the Go CLI
-        working-directory: "${{ github.workspace }}"
-        run: go test
+        run: go test -v ./...
