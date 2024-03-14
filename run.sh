@@ -1,4 +1,3 @@
 #!/bin/bash
 
-go run .
-   sdfsdfsdf
+go run ./cmd/watcher

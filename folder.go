@@ -262,6 +262,14 @@ func NewFolder(filesystem fs.FS, path string, parent Folder) (Folder, error) {
 	return &f, nil
 }
 
+func FolderFromString(str string, filesystem fs.FS) Folder {
+	f := folder{
+		path:       str,
+		parent:     parent,
+		filesystem: filesystem,
+	}
+}
+
 // GlobTree returns all the Files and Folders that match a glob pattern.
 // At acts recursively, returning a FileTree
 func (f *folder) GlobTree(g Globber) FileTree {

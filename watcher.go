@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/fsnotify/fsnotify"
 )
@@ -74,8 +75,37 @@ func (w *WatchTree) RemoveFolder(f Folder) {
 	f.Destroy()
 }
 
+func StripPrefix(path string, prefix string) string {
+
+	newPath := make([]string, 0)
+
+	paths := strings.Split(path, string(os.PathSeparator))
+	prefixes := strings.Split(prefix, string(os.PathSeparator))
+
+	for i, slug := range paths {
+		if len(prefixes) > i {
+			if prefixes[i] != paths[i] {
+				newPath = append(newPath, slug)
+			}
+		} else {
+			newPath = append(newPath, slug)
+		}
+	}
+
+	return filepath.Join(newPath...)
+
+}
+
 func StringToDirentry(path string, prefix string, filesystem fs.FS) (fs.DirEntry, error) {
-	fullPath := filepath.Join(prefix, path)
+
+	//	path = "testdata/foo.txt"
+	//  prefix = testdata
+	//filesystem mountered at testdata
+
+	//fullPath := strings.Replace(path, prefix+"/", "", 1)
+
+	fullPath := StripPrefix(path, prefix)
+
 	f, err := filesystem.Open(fullPath)
 	if err != nil {
 		return nil, err
@@ -93,6 +123,7 @@ func (w *WatchTree) Listen() (chan FolderEvent, chan fsnotify.Event, chan error)
 	go func() {
 		w.AddFolder(w.RootFolder())
 		for ev := range w.Watcher.Events {
+
 			dirEntry, err := StringToDirentry(ev.Name, w.prefix, w.Filesystem())
 			if err != nil {
 				panic(err)
@@ -100,11 +131,18 @@ func (w *WatchTree) Listen() (chan FolderEvent, chan fsnotify.Event, chan error)
 			if dirEntry.IsDir() {
 				//	create a new folder
 				//	but first we need to locate the proper place in the tree
-				newFolder, err := AddDescendantFolder(ev.Name, w.RootFolder())
-				if err != nil {
-					panic(err)
+
+				if ev.Has(fsnotify.Create) {
+					newFolder, err := AddDescendantFolder(ev.Name, w.RootFolder())
+					if err != nil {
+						panic(err)
+					}
+					w.AddFolder(newFolder)
 				}
-				w.AddFolder(newFolder)
+				if ev.Has(fsnotify.Remove) {
+					w.RemoveFolder()
+				}
+
 			} else {
 				//	this is a file, so wrap and pass
 				fmt.Println("@todo")
