@@ -20,12 +20,33 @@ The name was chosen haphzaradly to seem like "go recursive file watcher".
 
 ## Using it as a binary
 
-Install like so:
+Install and use like so:
 
 ```sh
 $ go install github.com/sean9999/go-fsnotify-recursively/cmd/gorph@latest
-$ gorph
+$ gorph # watch everything recursively in current directory
+$ gorph ~/Videos/**/*.mov # watch Videos recursively for anything with a .mov extension
 ```
 
 ## Using as a package
 
+```go
+package main
+import (
+    gorph "github.com/sean9999/go-fsnotify-recursively"
+)
+
+func main(){
+
+    //  watch for any text file under ./testdata/
+    //  double-stars mean search recursively
+    watcher := gorp.New("testdata/**/*.txt")
+
+    //  two channels
+    events, errs := watcher.Listen()
+
+    ...    
+    
+
+}
+```
