@@ -3,4 +3,4 @@
 *.private
 private.*
 private/
-
+dist/
