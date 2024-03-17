@@ -18,3 +18,14 @@ There does not appear to be a good alternative for this. The goal is:
 ## Why Gorph
 The name was chosen haphzaradly to seem like "go recursive file watcher".
 
+## Using it as a binary
+
+Install like so:
+
+```sh
+$ go install github.com/sean9999/go-fsnotify-recursively/cmd/gorph@latest
+$ gorph
+```
+
+## Using as a package
+

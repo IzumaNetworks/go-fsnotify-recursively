@@ -1,19 +1,20 @@
 package main
 
 import (
-	"flag"
 	"fmt"
+	"os"
 
 	gorph "github.com/sean9999/go-fsnotify-recursively"
 )
 
 func main() {
 
-	globExpressionPtr := flag.String("glob", "**", "the pattern to watch")
+	globExpression := "**"
+	if len(os.Args) > 1 {
+		globExpression = os.Args[1]
+	}
 
-	flag.Parse()
-
-	g, err := gorph.New(*globExpressionPtr)
+	g, err := gorph.New(globExpression)
 	if err != nil {
 		panic(err)
 	}
@@ -29,7 +30,7 @@ func main() {
 				return
 			}
 
-			//	omit events for regular files where glob does not match
+			//	omit events for regular files where glob doesn't match
 			if ev.Op != gorph.FsNotifyEvent || ev.Matches {
 				fmt.Println(gorphAsSSE(ev))
 			}
