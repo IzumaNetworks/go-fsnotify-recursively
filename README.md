@@ -18,5 +18,3 @@ There does not appear to be a good alternative for this. The goal is:
 ## Why Gorph
 The name was chosen haphzaradly to seem like "go recursive file watcher".
 
-> [!NOTE]
-> In active development. Not suitable for production. YMMV
