@@ -21,12 +21,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v4
         with:
           go-version: '1.22.0'
       - name: Build
         run: |
-          go build ./cmd/gorph
+          go build ./cmd/gorph -o gorph_${{ matrix.release_suffix }}
       - name: Release     
         uses: softprops/action-gh-release@v2
         with:
