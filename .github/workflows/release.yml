@@ -26,7 +26,7 @@ jobs:
           go-version: '1.22.0'
       - name: Build
         run: |
-          go build ./cmd/gorph -o gorph_${{ matrix.release_suffix }}
+          go build -o gorph_${{ matrix.release_suffix }} ./cmd/gorph
       - name: Release     
         uses: softprops/action-gh-release@v2
         with:
