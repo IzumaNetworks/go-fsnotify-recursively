@@ -29,9 +29,6 @@ func NewGlobber(fullString string) (Globber, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err != nil {
-		return nil, err
-	}
 	globber := &globber{fsRoot, globRoot}
 	return globber, nil
 }
@@ -57,7 +54,8 @@ func (g *globber) String() string {
 	return string(j)
 }
 
-func ComponentizeGlobString(globExpression string) (string, string, error) {
+// seperate the static root from the glob expression
+func ComponentizeGlobString(globExpression string) (staticRoot string, globExpr string, err error) {
 	tail := []string{}
 	fullPath := strings.Split(globExpression, string(os.PathSeparator))
 	head := fullPath[:]

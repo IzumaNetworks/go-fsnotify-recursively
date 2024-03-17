@@ -56,7 +56,9 @@ func (w *WatchTree) Globber() Globber {
 func (w *WatchTree) AddFolder(f Folder) {
 	//	prepend the prefix and pass the event to underlying fsnotify
 	fullyFullPath := filepath.Join(w.prefix, f.FullPath())
-	fmt.Println(fullyFullPath)
+
+	//fmt.Println(fullyFullPath)
+
 	w.Watcher.Add(fullyFullPath)
 	ev := NewFolderEvent(w.prefix, nil, f, "add", nil)
 
@@ -76,12 +78,9 @@ func (w *WatchTree) RemoveFolder(f Folder) {
 }
 
 func StripPrefix(path string, prefix string) string {
-
 	newPath := make([]string, 0)
-
 	paths := strings.Split(path, string(os.PathSeparator))
 	prefixes := strings.Split(prefix, string(os.PathSeparator))
-
 	for i, slug := range paths {
 		if len(prefixes) > i {
 			if prefixes[i] != paths[i] {
@@ -91,21 +90,11 @@ func StripPrefix(path string, prefix string) string {
 			newPath = append(newPath, slug)
 		}
 	}
-
 	return filepath.Join(newPath...)
-
 }
 
 func StringToDirentry(path string, prefix string, filesystem fs.FS) (fs.DirEntry, error) {
-
-	//	path = "testdata/foo.txt"
-	//  prefix = testdata
-	//filesystem mountered at testdata
-
-	//fullPath := strings.Replace(path, prefix+"/", "", 1)
-
 	fullPath := StripPrefix(path, prefix)
-
 	f, err := filesystem.Open(fullPath)
 	if err != nil {
 		return nil, err
@@ -139,13 +128,15 @@ func (w *WatchTree) Listen() (chan FolderEvent, chan fsnotify.Event, chan error)
 					}
 					w.AddFolder(newFolder)
 				}
+
 				if ev.Has(fsnotify.Remove) {
-					w.RemoveFolder()
+					//w.RemoveFolder()
+					fmt.Println("ev.Has(fsnotify.Remove)", ev)
 				}
 
 			} else {
 				//	this is a file, so wrap and pass
-				fmt.Println("@todo")
+				fmt.Println("@todo :: isFile ", ev)
 			}
 		}
 	}()

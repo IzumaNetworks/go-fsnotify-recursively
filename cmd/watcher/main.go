@@ -22,7 +22,7 @@ func main() {
 		case err, ok := <-errors:
 			fmt.Println("err", err, ok)
 		case life, ok := <-lifecycleEvents:
-			fmt.Println(life, ok)
+			fmt.Println("life", life, ok)
 		}
 	}
 
