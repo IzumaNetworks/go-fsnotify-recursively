@@ -34,7 +34,7 @@ type GorphEvent struct {
 
 func (gevent GorphEvent) toSSE() string {
 	id := time.Now().Nanosecond()
-	return fmt.Sprintf("id: %x\ndata: %s\ndata: %s\ndata: %s\n\n", id, gevent.Op.String(), gevent.NotifyEvent.Op.String(), gevent.NotifyEvent.Name)
+	return fmt.Sprintf("id: %x\ntype: fs\ndata: %s\ndata:  %s\ndata: %s\n\n", id, gevent.Op.String(), gevent.NotifyEvent.Op.String(), gevent.NotifyEvent.Name)
 }
 
 func (gevent GorphEvent) String() string {
