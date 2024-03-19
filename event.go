@@ -32,21 +32,13 @@ type GorphEvent struct {
 	Matches     bool
 }
 
-func (gevent GorphEvent) toSSE() string {
+func (gevent GorphEvent) toSSE(namespace string) string {
 	id := time.Now().Nanosecond()
-	return fmt.Sprintf("id: %x\nevent: fs\ndata: %s\ndata:  %s\ndata: %s\n\n", id, gevent.Op.String(), gevent.NotifyEvent.Op.String(), gevent.NotifyEvent.Name)
+	return fmt.Sprintf("id: %x\nevent: %s\ndata: %s\ndata: %s\ndata: %s\ndata: %s\n\n", id, namespace, gevent.Op.String(), gevent.NotifyEvent.Op.String(), gevent.NotifyEvent.Name, gevent.Path)
 }
 
 func (gevent GorphEvent) String() string {
-	// m := map[string]any{
-	// 	"Op":          gevent.Op.String(),
-	// 	"Path":        gevent.Path,
-	// 	"Matches":     gevent.Matches,
-	// 	"NotifyEvent": gevent.NotifyEvent.String(),
-	// }
-	// j, _ := json.Marshal(m)
-	// return string(j)
-	return gevent.toSSE()
+	return gevent.toSSE("fs")
 }
 
 func NotifyToGorphEvent(g *gorph, fevent *fsnotify.Event) GorphEvent {
