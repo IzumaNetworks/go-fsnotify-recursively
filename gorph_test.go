@@ -47,7 +47,7 @@ func TestNewGorph_Root(t *testing.T) {
 
 // test that gorph.Walk() returns entire file tree
 func TestNewGorph_Walk(t *testing.T) {
-	var VIDEOS = []string{".", "VID_1.mp4", "VID_2.mp4", "waiting-for-mommy.mov"}
+	var VIDEOS = []string{".", "Nuages-3.OGG"}
 	var DOWNLOADS = []string{".", "node", "node/node-v20.11.0-linux-x64.tar.xz"}
 
 	type args struct {
@@ -85,11 +85,11 @@ func TestNewGorph_Walk(t *testing.T) {
 
 // test that glob returns a correctly filtered file tree, with correct usage and single and double star ("*", "**")
 func TestNewGorph_Glob(t *testing.T) {
-	var VIDEOS = []string{"VID_1.mp4", "VID_2.mp4", "waiting-for-mommy.mov"}
+	var VIDEOS = []string{"Nuages-3.OGG"}
 	var JUST_NODE = []string{"node"}
 	var DOWNLOADS = []string{".", "node", "node/node-v20.11.0-linux-x64.tar.xz"}
 	var DOWNLOADS_ROOTED = []string{"Downloads", "Downloads/node", "Downloads/node/node-v20.11.0-linux-x64.tar.xz"}
-	var MOMMY = []string{"Documents/the-mommy-book.txt", "Pictures/mommy-and-me.jpeg", "Videos/waiting-for-mommy.mov"}
+	var MOMMY = []string{"Documents/the-mommy-book.txt", "Pictures/mommy-and-me.jpeg"}
 
 	type args struct {
 		root    string
@@ -129,7 +129,7 @@ func TestNewGorph_Glob(t *testing.T) {
 
 // test that gorph.Folders() returns the folder tree
 func TestNewGorph_Folders(t *testing.T) {
-	var JUST_NODE = []string{".", "Documents", "Documents/torus", "Documents/torus/jamaica", "Downloads", "Downloads/node", "Pictures", "Videos"}
+	var JUST_NODE = []string{".", "Documents", "Documents/torus", "Documents/torus/jamaica", "Downloads", "Downloads/node", "Music", "Pictures", "Videos"}
 	type args struct {
 		root    string
 		back    fs.FS
@@ -163,7 +163,7 @@ func TestNewGorph_Folders(t *testing.T) {
 // test that gorph.Children(parent) returns the children of parent
 func TestNewGorph_Children(t *testing.T) {
 	var DOCUMENTS = []string{"Documents/torus", "Documents/torus/jamaica"}
-	var ROOT = []string{"Documents", "Documents/torus", "Documents/torus/jamaica", "Downloads", "Downloads/node", "Pictures", "Videos"}
+	var ROOT = []string{"Documents", "Documents/torus", "Documents/torus/jamaica", "Downloads", "Downloads/node", "Music", "Pictures", "Videos"}
 
 	root := "testdata"
 	testData := os.DirFS(root)

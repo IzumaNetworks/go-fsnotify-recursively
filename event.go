@@ -1,7 +1,8 @@
 package gorph
 
 import (
-	"encoding/json"
+	"fmt"
+	"time"
 
 	"github.com/bmatcuk/doublestar/v4"
 	"github.com/fsnotify/fsnotify"
@@ -31,15 +32,21 @@ type GorphEvent struct {
 	Matches     bool
 }
 
+func (gevent GorphEvent) toSSE() string {
+	id := time.Now().Nanosecond()
+	return fmt.Sprintf("id:\t%x\ndata:\t%s\ndata:\t%s\ndata:\t%s\n\n", id, gevent.Op.String(), gevent.NotifyEvent.Op.String(), gevent.NotifyEvent.Name)
+}
+
 func (gevent GorphEvent) String() string {
-	m := map[string]any{
-		"Op":          gevent.Op.String(),
-		"Path":        gevent.Path,
-		"Matches":     gevent.Matches,
-		"NotifyEvent": gevent.NotifyEvent.String(),
-	}
-	j, _ := json.Marshal(m)
-	return string(j)
+	// m := map[string]any{
+	// 	"Op":          gevent.Op.String(),
+	// 	"Path":        gevent.Path,
+	// 	"Matches":     gevent.Matches,
+	// 	"NotifyEvent": gevent.NotifyEvent.String(),
+	// }
+	// j, _ := json.Marshal(m)
+	// return string(j)
+	return gevent.toSSE()
 }
 
 func NotifyToGorphEvent(g *gorph, fevent *fsnotify.Event) GorphEvent {
