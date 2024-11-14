@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	gorph "github.com/sean9999/go-fsnotify-recursively"
+	gorph "go.izuma.io/go-fsnotify-recursively"
 )
 
 func main() {

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	gorph "github.com/sean9999/go-fsnotify-recursively"
+	gorph "go.izuma.io/go-fsnotify-recursively"
 )
 
 type ServerSentEvent struct {

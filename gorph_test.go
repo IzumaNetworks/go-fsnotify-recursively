@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	gorph "github.com/sean9999/go-fsnotify-recursively"
+	gorph "go.izuma.io/go-fsnotify-recursively"
 )
 
 // test that gorph.Root() returns correct root path
